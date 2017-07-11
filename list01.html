@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<canvas id="aCanvas"></canvas>
+<canvas id="aCanvas" 
+ width="300" height="300"></canvas>
 <script type="text/javascript">
 
 var c = document.getElementById("aCanvas")
 var ctx = c.getContext("2d")
-ctx.fillRect(10,10,99,199)
+
+//画像ファイルの読み込み
+var i = new Image();
+i.src = "Penguins.jpg";
+i.onload = funtion() {
+  ctx.drawImage(i,0,0);
+};
+//ctx.fillRect(10,10,99,199)
 
 </script>
