@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>迷路の探索：キュー版</title>
+  <style>canvas { background-color: #bbbbbb; }</style>
+</head>
+<body><canvas id="canvas" width="480" height="360"></canvas>
+<div align="left">
+<input type="button" onclick="walk()" value="探索"></div>
+<script>
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+var maze = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
+            [1,0,1,0,1,1,1,0,1,1,1,0,1,1,0,1],
+            [1,0,1,0,0,0,0,0,0,0,1,0,1,0,0,1],
+            [1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,1],
+            [1,0,1,0,1,1,1,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,1,0,0,0,0,1,0,0,1,1,0,1],
+            [1,0,1,0,1,1,1,1,0,1,1,1,1,0,0,1],
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1],
+            [1,0,1,1,0,1,1,0,1,1,0,1,0,0,0,1],
+            [1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]];
+var queue = new Array();
+var route = new Array(12);
+for(var i=0; i<12; i++){
+  route[i] = new Array(16);
+}
+var WALKED = 99;
+var isGoal = false;
+var startPos = {x:1, y:1}, goalPos = {x:13, y:9};
+queue.push({x:startPos.x, y:startPos.y});
+
+var mazeDraw = function(){
+  for(var y=0; y<12; y++){
+    for(var x=0; x<16; x++){
+      if(maze[y][x] == 1){
+        context.fillStyle = "rgb(157, 187, 97)";
+        context.fillRect(x*30, y*30, 30, 30);
+      }
+      if(maze[y][x] == WALKED){
+        context.fillStyle = "rgb(84, 109, 142)";
+        context.fillRect(x*30, y*30, 30, 30);
+      }
+    }
+  }
+  context.fillStyle = "rgb(0, 0, 255)";
+  context.fillRect(startPos.x*30, startPos.y*30, 30, 30);
+  context.fillStyle = "rgb(255, 255, 0)";
+  context.fillRect(goalPos.x*30, goalPos.y*30, 30, 30);
+}
+
+var BFS = function (){
+  var pos = queue.shift();
+  var x = pos.x;
+  var y = pos.y;
+  // ゴールを発見したかどうかをチェック
+  if(x == goalPos.x && y == goalPos.y){
+    context.fillStyle = "rgb(128, 126, 0)";
+    for(;;){
+      pos = route[y][x];
+      if(pos.px==startPos.x && pos.py==startPos.y){
+        break;
+      }
+      context.fillRect(pos.px*30, pos.py*30, 30, 30);
+      x = pos.px;
+      y = pos.py;
+    }
+    alert("ゴール");
+    isGoal = true;
+    return;
+  }
+  // 上
+  if(maze[y-1][x] == 0){
+    queue.push({x:x, y:y-1});
+    route[y-1][x] = {px:x, py:y};
+    maze[y-1][x] = WALKED;
+  }
+  // 下
+  if(maze[y+1][x] == 0){
+    queue.push({x:x, y:y+1});
+    route[y+1][x] = {px:x, py:y};
+    maze[y+1][x] = WALKED;
+  }
+  // 左
+  if(maze[y][x-1] == 0){
+    queue.push({x:x-1, y:y});
+    route[y][x-1] = {px:x, py:y};
+    maze[y][x-1] = WALKED;
+  }
+  // 右
+  if(maze[y][x+1] == 0){
+    queue.push({x:x+1, y:y});
+    route[y][x+1] = {px:x, py:y};
+    maze[y][x+1] = WALKED;
+  }
+  return;
+}
+
+window.onload = mazeDraw;
+
+var walk = function(){
+  if(!isGoal){
+    mazeDraw();
+    BFS();
+  }
+}
+</script>
+</body>
+</html>

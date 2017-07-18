@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>風になびく旗のシミュレーション</title>
+  <style>canvas { background-color: #000000; }</style>
+</head>
+<body onload="init()">
+<canvas id="canvas" width="400" height="300"></canvas>
+<script>
+var canvas; // キャンバス
+var context; // 描画コンテキスト
+var timer; // タイマー
+var cnt = 0; // draw()を実行した回数
+var srcImage; // 元の画像
+var outImage; // 変形後の画像
+
+function init() {
+  // 描画コンテキストを取得
+  canvas = document.getElementById("canvas");
+  context = canvas.getContext("2d");
+  // キャンバスの中心
+  var cx = canvas.width / 2;
+  var cy = canvas.height / 2;
+  // 画像の読み込み
+  var image = new Image();
+  image.src = "image02.jpg";
+  image.onload = function () {
+    // 画像の中心
+    var px = image.width / 2;
+    var py = image.height / 2;
+    // キャンバスの中心に描画
+    context.drawImage(image, cx - px, cy - py);
+    // ピクセルデータを取得
+    srcImage = context.getImageData(0, 0, canvas.width, canvas.height);
+  }
+  // タイマースタート。200ミリ秒間隔でdraw()を実行
+  timer = setInterval(draw, 200);
+}
+//--------------------------------------------------
+// 描画処理
+//--------------------------------------------------
+function draw() {
+  // 位相（0～6の整数）
+  var t = cnt % 7;
+  cnt++;
+  // 変形後の画像を生成
+  outImage = context.createImageData(canvas.width, canvas.height);
+  // 旗の形に変形
+  transWave(srcImage, outImage, t);
+  // 変形後の画像を表示
+  context.putImageData(outImage, 0, 0);
+}
+//-----------------------------------------------
+// 旗の形に変換
+//-----------------------------------------------
+function transWave(srcImage, outImage, s) {
+  var srcData = srcImage.data; // 元のデータ
+  var dstData = outImage.data; // 変形後のデータ
+  var width = srcImage.width; // 幅
+  var height = srcImage.height; // 高さ
+  // 角速度（1.5は周波数）
+  var w = (2 * Math.PI) / (width / 1.5);
+  // ピクセル操作
+  for (var y = 0; y < height; y++) {
+    for (var x = 0; x < width; x++) {
+      // 波を生成（振幅:20、sは位相）
+      // parseInt()で整数に変換
+      var y0 = parseInt(y - 20 * Math.sin(w * x + s));
+      // インデックス
+      var si = (width * y0 + x) * 4; // 変形前
+      var di = (width * y + x) * 4; // 変形後
+      // 色をセット
+      if ((y0 < 0) || (y0 > height)) {
+        dstData[di + 0] = 0; // r
+        dstData[di + 1] = 0; // g
+        dstData[di + 2] = 0; // b
+        dstData[di + 3] = 255; // alpha
+      } else {
+        dstData[di + 0] = srcData[si + 0];
+        dstData[di + 1] = srcData[si + 1];
+        dstData[di + 2] = srcData[si + 2];
+        dstData[di + 3] = 255;
+      }
+    }
+  }
+}
+</script>
+</body>
+</html>

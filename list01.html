@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <canvas id="aCanvas" 
  width="300" height="300"></canvas>
-<script type="text/javascript">
-
-var c = document.getElementById("aCanvas")
-var ctx = c.getContext("2d")
-
-//画像ファイルの読み込み
-var i = new Image();
-i.src = "Penguins.jpg";
-i.onload = function() {
-  //ctx.drawImage(i,0,0);
-  ctx.drawImage(i,0,0,50,50,50,50,100,100);
-};
-//ctx.fillRect(10,10,99,199)
-
-</script>
 
 http://web-cache.stream.ne.jp/www11/nikkeibpw/itpro/atcl/mag/14/381892/100600001/GameNSW2014.zip
 パスワードの件
 143ページ
+
+<div id="pass"></div>
+
+<script type="text/javascript">
+var mag = "Nikkei Software";
+var date = "20141121";
+var pass = 2484;
+for(var i=0; i<mag.length;i++){
+  pass = pass + mag.charCodeAt(i);
+}
+for(var i=0;i<date.length;i=i+2){
+  pass = pass << parseInt(date.charAt(i));
+}
+document.getElementById("pass").innerText = pass;
+</script>

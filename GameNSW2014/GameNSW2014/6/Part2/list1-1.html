@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>キャンバスに図形を描画</title>
+  <style>canvas { background-color: #d0d0d0; }</style>
+</head>
+<body onload="draw()">
+<canvas id="canvas" width="400" height="400"></canvas>
+<script>
+function draw() {
+  var canvas = document.getElementById("canvas");
+  var context = canvas.getContext("2d");
+  context.moveTo(50, 50);
+  context.lineTo(150, 50);
+  context.lineTo(150, 150);
+  context.moveTo(250, 50);
+  context.lineTo(350, 50);
+  context.lineTo(350, 150);
+  context.closePath();
+  context.stroke();
+}
+</script>
+</body>
+</html>

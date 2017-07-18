@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=800">
+<title>Fish Shooting</title>
+<script type="text/javascript" src="shooting.js"></script>
+<style>
+  * { margin:0; padding:0; }
+  .layer {
+    position: absolute;
+    background-color: transparent;
+    left:0; top:0;
+  }
+  #msgBox {
+  	background-color: rgba(255,255,255,0.5);
+  	color: black;
+  	font-size: 11px; padding: 5px;
+  	width: 150px; height: 20px;
+  	left: 10px; top: 10px;
+  }
+</style>
+</head><body>
+<div id="msgBox" class="layer">Score: 0</div>
+<canvas id="gameCV" class="layer" 
+ width="600" height="400"></canvas>
+<canvas id="backCV" class="layer"
+ width="600" height="400"></canvas>
+<div style="clear:both;height:410px"></div>
+<p>[Z]キーでモリを投げます。
+[Enter]キーでリプレイ。</p>
+</body></html>
+
